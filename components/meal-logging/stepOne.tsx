@@ -8,7 +8,9 @@ export default function StepOne({ formData, setFormData, onPrevious, onNext }: M
   const handleNextClick = () => {
     if (selectedMeal) {
       // Updating formData with the selectedMeal when moving to the next step
+      if (setFormData && formData) {
       setFormData({ ...formData, mealType: selectedMeal });
+      }
       if (onNext) onNext();
     } else {
       // Handle the case where no option is selected

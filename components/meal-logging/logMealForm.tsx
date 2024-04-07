@@ -6,6 +6,8 @@ import StepTwo from "./stepTwo";
 import StepThree from "./stepThree";
 import StepFour from "./stepFour";
 import { MealLogProps, FormData } from "@/app/lib/types";
+import { useRouter } from 'next/router';
+const mongo = require("../../backend/index.js");
 
 type ExtendedMealLogProps = MealLogProps & {
     isOpen: boolean;
@@ -26,7 +28,7 @@ const LogMealForm = ({ isOpen, onClose }: ExtendedMealLogProps) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Submitting form data to the server/API
+    let ai_response : string = mongo.formResponse(formData);
     console.log(formData);
     onClose();
   };

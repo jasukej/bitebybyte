@@ -14,7 +14,9 @@ export default function StepThree({ formData, setFormData, onNext, onPrevious }:
   };
 
   const handleNextClick = () => {
+    if (setFormData && formData) {
     setFormData({ ...formData, mealFeeling: selectedFeelings });
+    }
     if (onNext) onNext();
   };
 

@@ -7,7 +7,9 @@ export default function StepTwo({ formData, setFormData, onNext, onPrevious }: M
 
   const handleNextClick = () => {
     if (mealDescription) {
+        if (setFormData && formData) {
       setFormData({ ...formData, mealDescription });
+        }
       if (onNext) onNext();
     } else {
       alert('Please enter a description of your meal');

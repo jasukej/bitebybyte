@@ -24,13 +24,13 @@ async function connectMongoDB() {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-    //do actions here
-    //await addEntryToMongoDB();
-    const entry = await addEntryToMealLog("lunch", new Date("2024-04-07"), "beef egg bowl", "angry, stressed", "I hate onions");
-    response = await cohere.getResponse("lunch", "beef egg bowl", "angry, stressed", "I hate onions");
-    console.log("CohereAI replies: " + response);
-    // if we want to log the AI response in our database
-    await addEntryToAiLog(entry.insertedId, response);
+    // //do actions here
+    // //await addEntryToMongoDB();
+    // const entry = await addEntryToMealLog("lunch", new Date("2024-04-07"), "beef egg bowl", "angry, stressed", "I hate onions");
+    // response = await cohere.getResponse("lunch", "beef egg bowl", "angry, stressed", "I hate onions");
+    // console.log("CohereAI replies: " + response);
+    // // if we want to log the AI response in our database
+    // await addEntryToAiLog(entry.insertedId, response);
 
   } finally {
     // Ensures that the client will close when you finish/error
@@ -40,6 +40,13 @@ async function connectMongoDB() {
 //call connectMongoDB
 connectMongoDB().catch(console.dir);
 
+async function formResponse(formData) {
+    const entryID = await addEntryToMealLog(formData.mealType, Date(), formData.mealDescription, formData.mealFeeling.join(", "), formData.additionalNotes);
+    response = await cohere.getResponse(formData.mealType, formData.mealDescription, formData.mealFeeling.join(", "), formData.additionalNotes);
+    await addEntryToAiLog(entryID, response);
+    return response;
+}
+
 async function addEntryToMealLog(mealType_str, date_date, mealContent_str, moodTags_str, reflection_str) {
     const doc = { mealType: mealType_str, date: date_date, mealContent: mealContent_str, moodTags: moodTags_str, 
         reflection: reflection_str };
@@ -47,6 +54,7 @@ async function addEntryToMealLog(mealType_str, date_date, mealContent_str, moodT
     console.log(
        `A document was inserted with the _id: ${result.insertedId}`,
     );
+    return result.insertedId;
 }
 
 async function removeEntryFromMealLog(mealType_str, date_date) {
