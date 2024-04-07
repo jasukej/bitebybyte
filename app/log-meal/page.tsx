@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import StepOne from "@/components/meal-logging/stepOne";
 import StepTwo from "@/components/meal-logging/stepTwo";
 import StepThree from "@/components/meal-logging/stepThree";
@@ -29,7 +30,7 @@ export default function LogMealPage() {
     //event.preventDefault();
     // Perform the form submission logic, e.g., sending data to the backend
     try {
-      const response = await fetch('/api/form', {
+      const response = await fetch('http://localhost:3001/api/form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,14 +38,9 @@ export default function LogMealPage() {
         body: JSON.stringify(formData),
       });
 
-      
-
       if (!response.ok) {
         throw new Error('Failed to submit form.');
       }
-
-      // Handle success (optional)
-      console.log('Form submitted successfully.');
     } catch (error) {
       console.error('Error submitting form.');
     }

@@ -21,15 +21,15 @@ async function connectMongoDB() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-    // //do actions here
-    // //await addEntryToMongoDB();
-    // const entry = await addEntryToMealLog("dinner", new Date("2024-04-07"), "granola bar", "numb, happy", "i am hungry");
-    // response = await cohere.getResponse("dinner", "granola bar", "numb, happy", "i am hungry");
-    // console.log("CohereAI replies: " + response);
-    // // if we want to log the AI response in our database
+    //do actions here
+    //await addEntryToMongoDB();
+    const entry = await addEntryToMealLog("dinner", new Date("2024-04-07"), "granola bar", "numb, happy", "i am hungry");
+    response = await cohere.getResponse("dinner", "granola bar", "numb, happy", "i am hungry");
+    console.log("CohereAI replies: " + response);
+    // if we want to log the AI response in our database
     // await addEntryToAiLog(entry.insertedId, response);
 
   } finally {
@@ -38,23 +38,45 @@ async function connectMongoDB() {
   }
 }
 //call connectMongoDB
-connectMongoDB().catch(console.dir);
+// connectMongoDB().catch(console.dir);
 
 async function formResponse(formData) {
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
     const entryID = await addEntryToMealLog(formData.mealType, Date(), formData.mealDescription, formData.mealFeeling.join(", "), formData.additionalNotes);
     response = await cohere.getResponse(formData.mealType, formData.mealDescription, formData.mealFeeling.join(", "), formData.additionalNotes);
-    await addEntryToAiLog(entryID, response);
+    // await addEntryToAiLog(entryID, response);
+
     return response;
+
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
 }
 
 async function addEntryToMealLog(mealType_str, date_date, mealContent_str, moodTags_str, reflection_str) {
-    const doc = { mealType: mealType_str, date: date_date, mealContent: mealContent_str, moodTags: moodTags_str, 
-        reflection: reflection_str };
+  try {
+    await client.connect();
+    const doc = {
+      mealType: mealType_str, date: date_date, mealContent: mealContent_str, moodTags: moodTags_str,
+      reflection: reflection_str
+    };
     const result = await meal_log.insertOne(doc);
     console.log(
-       `A document was inserted with the _id: ${result.insertedId}`,
+      `A document was inserted with the _id: ${result.insertedId}`,
     );
+
     return result.insertedId;
+
+  } finally {
+    await client.close();
+  }
 }
 
 async function removeEntryFromMealLog(mealType_str, date_date) {
@@ -111,20 +133,30 @@ function start() {
   const app = express();
   const bodyParser = require('body-parser');
   // let http = require('http').Server(app);
+  //connectMongoDB().catch(console.dir);
 
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }));
 
+  app.post('/api/form', async (req, res) => {
+    console.log('Received POST request to /api/form');
+    console.log(req.body);
+
+    const response = await formResponse(req.body);
+    console.log(response);
+    res.status(200).json(response);
+  });
+
   app.get("/home", (req, res) => {
+    console.log("yo");
     res.json({ message: "Hello from server!" });
   });
 
-  app.post('/api/form', createFormHandler);
-
-
 async function createFormHandler(req, res) {
+  console.log(req.body);
   const formData = req.body;
   const response = await formResponse(formData);
+  console.log(response);
   res.status(200).json(response);
 }
   
