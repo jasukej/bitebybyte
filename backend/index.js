@@ -24,13 +24,13 @@ async function connectMongoDB() {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
-    // //do actions here
-    // //await addEntryToMongoDB();
-    // const entry = await addEntryToMealLog("lunch", new Date("2024-04-07"), "beef egg bowl", "angry, stressed", "I hate onions");
-    // response = await cohere.getResponse("lunch", "beef egg bowl", "angry, stressed", "I hate onions");
-    // console.log("CohereAI replies: " + response);
-    // // if we want to log the AI response in our database
-    // await addEntryToAiLog(entry.insertedId, response);
+    //do actions here
+    //await addEntryToMongoDB();
+    const entry = await addEntryToMealLog("lunch", new Date("2024-04-07"), "beef egg bowl", "angry, stressed", "I hate onions");
+    response = await cohere.getResponse("lunch", "beef egg bowl", "angry, stressed", "I hate onions");
+    console.log("CohereAI replies: " + response);
+    // if we want to log the AI response in our database
+    await addEntryToAiLog(entry.insertedId, response);
 
   } finally {
     // Ensures that the client will close when you finish/error

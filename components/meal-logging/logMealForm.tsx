@@ -7,7 +7,7 @@ import StepThree from "./stepThree";
 import StepFour from "./stepFour";
 import { MealLogProps, FormData } from "@/app/lib/types";
 import { useRouter } from 'next/router';
-const mongo = require("../../backend/index.js");
+//const mongo = require("../../backend/index.js");
 
 type ExtendedMealLogProps = MealLogProps & {
     isOpen: boolean;
@@ -26,10 +26,28 @@ const LogMealForm = ({ isOpen, onClose }: ExtendedMealLogProps) => {
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let ai_response : string = mongo.formResponse(formData);
-    console.log(formData);
+    
+    try {
+      const response = await fetch('/api/form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form.');
+      }
+
+      // Handle success (optional)
+      console.log('Form submitted successfully.');
+    } catch (error) {
+      console.error('Error submitting form.');
+    }
+
     onClose();
   };
 
