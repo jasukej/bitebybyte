@@ -56,7 +56,7 @@ async function returnAllEntriesMealLog() {
         moodTags: doc.moodTags, 
         reflection: doc.reflection
       });
-    } 
+    }
     return arr;
 }
 
