@@ -1,4 +1,7 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
+
+const cohere = require("./cohere.js");
+
 const uri = "mongodb+srv://youcode:salmonpoke@youcode24.7yn1u39.mongodb.net/?retryWrites=true&w=majority&appName=youcode24";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -23,6 +26,9 @@ async function connectMongoDB() {
 
     //do actions here
     //await addEntryToMongoDB();
+    await addEntryToMealLog("lunch", new Date("2024-04-07"), "beef egg bowl", "angry, stressed", "I hate onions");
+    response = await cohere.getResponse("lunch", "beef egg bowl", "angry, stressed", "I hate onions");
+    console.log("CohereAI replies: " + response);
 
   } finally {
     // Ensures that the client will close when you finish/error
