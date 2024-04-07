@@ -23,7 +23,7 @@ export default function StepTwo({ formData, setFormData, onNext, onPrevious }: M
       <LogMealHeader />
 
       <div className="p-6">
-        <h2 className="text-2xl font-semibold mb-2">What did you have for this meal?</h2>
+        <h2 className="text-2xl font-semibold font-sans-serif mb-2">What did you have for this meal?</h2>
         <p className="text-gray-500 mb-8 italic font-light ">Enter your response below</p>
         <textarea
           value={mealDescription}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import LogMealHeader from "./logMealHeader";
 import { MealLogProps } from "@/app/lib/types";
-import BottomPaddingNoText from '../bottomPaddingNoText';
+import BottomPaddingNoText from "../bottomPaddingNoText";
 
 export default function StepOne({
   formData,
@@ -33,7 +33,7 @@ export default function StepOne({
       <main className="">
         <LogMealHeader />
         <div className="p-6">
-          <h2 className="text-2xl font-semibold mb-2">
+          <h2 className="text-2xl font-semibold font-sans-serif mb-2">
             Which meal are you having? 🥘
           </h2>
           <p className="text-gray-500 mb-8 italic font-light">Choose one</p>

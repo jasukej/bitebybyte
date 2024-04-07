@@ -21,7 +21,7 @@ export default function LogMealPage() {
 
   // Navigate back to the previous page or home page on cancel
   const handleCancel = () => {
-    router.push("/"); // Change this to the desired path
+    router.push("/home"); // Change this to the desired path
   };
 
   // Final submission handler
