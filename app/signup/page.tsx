@@ -50,7 +50,7 @@ export default function SignUpPage() {
             />
           </div>
           <div>
-            <button className="w-full bg-white border border-black shadow-lg py-2 rounded-full mb-1 hover:bg-accent-2 active:bg-primary hover:text-white mb-2">
+            <button className="w-full bg-white border border-black shadow-lg py-2 rounded-full mb-1 hover:bg-accent-2 active:bg-primary hover:text-white">
               Sign Up
             </button>
             <p className="text-center text-white text-sm mb-4">
