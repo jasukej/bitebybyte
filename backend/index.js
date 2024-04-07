@@ -26,9 +26,11 @@ async function connectMongoDB() {
 
     //do actions here
     //await addEntryToMongoDB();
-    await addEntryToMealLog("lunch", new Date("2024-04-07"), "beef egg bowl", "angry, stressed", "I hate onions");
+    const entry = await addEntryToMealLog("lunch", new Date("2024-04-07"), "beef egg bowl", "angry, stressed", "I hate onions");
     response = await cohere.getResponse("lunch", "beef egg bowl", "angry, stressed", "I hate onions");
     console.log("CohereAI replies: " + response);
+    // if we want to log the AI response in our database
+    await addEntryToAiLog(entry.insertedId, response);
 
   } finally {
     // Ensures that the client will close when you finish/error
@@ -61,6 +63,30 @@ async function returnAllEntriesMealLog() {
         mealContent: doc.mealContent, 
         moodTags: doc.moodTags, 
         reflection: doc.reflection
+      });
+    }
+    return arr;
+}
+
+async function addEntryToAiLog(input_id_objectid, response_str,) {
+    const doc = { input_id: input_id_objectid, response: response_str };
+    const result = await ai_log.insertOne(doc);
+    console.log(
+       `A document was inserted with the _id: ${result.insertedId}`,
+    );
+}
+
+async function removeEntryFromAiLog(input_id_objectid) {
+    youcode.ai_log.findOneAndDelete({input_id: input_id_objectid});
+}
+
+async function returnAllEntriesAiLog() {
+    var arr = [];
+    const collectionElements = ai_log.find();
+    for await (const doc of collectionElements) {
+      arr.push({
+        input_id: doc.input_id, 
+        response: doc.response
       });
     }
     return arr;
