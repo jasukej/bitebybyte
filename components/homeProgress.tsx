@@ -1,11 +1,25 @@
 import React from "react";
 import Clock from "react-live-clock";
 import Image from "next/image";
+import { mealLogData } from '@/app/lib/data';
+import { LiaLinkSolid } from "react-icons/lia";
+
+interface MealLogEntry {
+    mealType: string;
+    date: string;
+    mealContent: string;
+    moodTags: string[];
+    reflection: string;
+  }
+
+  interface MealLogDataProps {
+    mealLogData: MealLogEntry[];
+  }
 
 export default function HomeProgress() {
   return (
     <section id="homeProgress">
-      <div className="bg-accent-1 p-8 mx-8 shadow-lg rounded-md border border-primary">
+      <div className="bg-accent-1 p-8 mx-8 shadow-lg rounded-md border border-primary w-fit">
         <div
           className="text-white font-sans font-normal
         mb-4 text-xl flex flex-col gap-y-4"
@@ -37,7 +51,7 @@ function MealHighlight() {
       <div className="bg-white text-black border border-black p-6 max-w-[314px] flex flex-col gap-y-1">
         <div className="max-h-[7rem] max-w-[12rem] rounded-md">
           <Image
-            src="/nasgor_sample.jpeg"
+            src="/bulgogi_sample.jpeg"
             alt="Nasi Goreng"
             className="h-full w-full cover rounded-sm border border-black"
             width={300}
@@ -73,11 +87,34 @@ function ClockObj() {
 function FeelingsToday() {
   return (
     <div className="bg-white border border-black p-4 px-3 min-h-[251px]">
-      <p className="text-sm font-sans">Today you felt...</p>
-      <h1 className="text-4xl font-semibold font-sans">Okay</h1>
+      <p className="text-sm font-sans mb-2">Today, you felt...</p>
+      <div>
+      <UniqueMoodTags mealLogData={mealLogData}/>
+      </div>
     </div>
   );
 }
+
+export function UniqueMoodTags({ mealLogData }: MealLogDataProps) {
+
+    const allMoodTags = mealLogData.flatMap(log => log.moodTags);
+  
+    // Remove duplicates by converting the array into a Set, then back into an array
+    const uniqueMoodTags: string[] = [...new Set(allMoodTags)];
+  
+    return (
+      <div className="flex flex-wrap">
+        {uniqueMoodTags.slice(0, 4).map((item, index) => (
+          <div
+            className="bg-primary/[0.7] px-3  m-1 text-[0.7rem] uppercase tracking-wider text-white rounded-full"
+            key={index}
+          >
+            {item}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
 function MealsEaten() {
   return (

@@ -3,8 +3,10 @@ import Image from "next/image";
 
 function LastAte() {
   return (
-    <div className="bg-primary text-background shadow flex flex-row gap-x-6 px-24 mb-6 py-6 items-center">
-      <div className="h-[7rem] w-[7rem] rounded-md">
+    <div className="bg-primary text-background mb-6">
+        <div className="flex justify-center">
+    <div className="shadow flex flex-row gap-x-6 px-24  py-6 items-center">
+      <div className="h-[7rem] min-w-[7rem] w-[7rem] rounded-md">
         <Image 
         src="/nasgor_sample.jpeg" 
         alt="Nasi Goreng"
@@ -19,6 +21,8 @@ function LastAte() {
           You felt <span className="font-bold">happy</span> and <span className="font-bold">nostalgic</span> eating this. 
         </p>
       </div>
+    </div>
+    </div>
     </div>
   );
 }
