@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LogMealHeader from './logMealHeader';
 import { MealLogProps } from '@/app/lib/types';
+import BottomPaddingNoText from '../bottomPaddingNoText';
 
 export default function StepTwo({ formData, setFormData, onNext, onPrevious }: MealLogProps) {
   const [mealDescription, setMealDescription] = useState('');
@@ -17,12 +18,13 @@ export default function StepTwo({ formData, setFormData, onNext, onPrevious }: M
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container ">
+        <main className="">
       <LogMealHeader />
 
-      <main className="mt-10">
-        <h2 className="text-xl font-semibold mb-4">What did you have for this meal?</h2>
-        <p className="text-gray-500 mb-8">Enter your response below</p>
+      <div className="p-6">
+        <h2 className="text-2xl font-semibold mb-2">What did you have for this meal?</h2>
+        <p className="text-gray-500 mb-8 italic font-light ">Enter your response below</p>
         <textarea
           value={mealDescription}
           onChange={(e) => setMealDescription(e.target.value)}
@@ -30,22 +32,26 @@ export default function StepTwo({ formData, setFormData, onNext, onPrevious }: M
           className="w-full p-2 border-2 border-gray-300 rounded-lg"
           rows={4}
         ></textarea>
+        </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 w-full flex justify-between p-4 bg-white">
+      <footer className="fixed bottom-0 left-0 w-full flex justify-between">
         <button
           onClick={onPrevious}
-          className="bg-white text-black border border-black p-3 flex-1 mr-2"
+          className="bg-white text-black border w-1/2 border-black p-3 flex-1"
         >
           Previous
         </button>
         <button
           onClick={handleNextClick}
-          className="bg-yellow-muted text-white p-3 border border-black flex-1 ml-2"
+          className="w-1/2 bg-yellow-muted text-black p-3 border border-black"
         >
           Next
         </button>
       </footer>
+
+      <BottomPaddingNoText />
+
     </div>
   );
 }

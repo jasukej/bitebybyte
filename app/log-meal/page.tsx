@@ -1,20 +1,14 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
-import StepOne from "./stepOne";
-import StepTwo from "./stepTwo";
-import StepThree from "./stepThree";
-import StepFour from "./stepFour";
-import { MealLogProps, FormData } from "@/app/lib/types";
-import { useRouter } from 'next/router';
-// const mongo = require("../../backend/index.js");
+import { useRouter } from "next/navigation";
+import StepOne from "@/components/meal-logging/stepOne";
+import StepTwo from "@/components/meal-logging/stepTwo";
+import StepThree from "@/components/meal-logging/stepThree";
+import StepFour from "@/components/meal-logging/stepFour";
+import { FormData } from "@/app/lib/types";
 
-type ExtendedMealLogProps = MealLogProps & {
-    isOpen: boolean;
-    onClose: () => void;
-  };
-
-const LogMealForm = ({ isOpen, onClose }: ExtendedMealLogProps) => {
+export default function LogMealPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     mealType: "",
@@ -23,24 +17,28 @@ const LogMealForm = ({ isOpen, onClose }: ExtendedMealLogProps) => {
     additionalNotes: "",
   });
 
+  const router = useRouter();
+
+  // Navigate back to the previous page or home page on cancel
+  const handleCancel = () => {
+    router.push("/"); // Change this to the desired path
+  };
+
+  // Final submission handler
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // Perform the form submission logic, e.g., sending data to the backend
+
+    console.log(formData);
+    handleCancel(); // Assuming we navigate away after submitting the form
+  };
+
+  // Step transition handlers
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    
-    // let ai_response : string = mongo.formResponse(formData);
-    console.log(formData);
-    onClose();
-  };
-
-  const handleCancel = () => {
-    onClose();
-    // Call onClose when the user cancels
-  };
-
+  // Render the current step based on the state
   const renderStep = () => {
-    if (!isOpen) return null;
     switch (currentStep) {
       case 1:
         return (
@@ -77,7 +75,7 @@ const LogMealForm = ({ isOpen, onClose }: ExtendedMealLogProps) => {
             formData={formData}
             setFormData={setFormData}
             onPrevious={prevStep}
-            onSubmit={() => handleSubmit}
+            onSubmit={handleSubmit}
             onCancel={handleCancel}
           />
         );
@@ -87,12 +85,8 @@ const LogMealForm = ({ isOpen, onClose }: ExtendedMealLogProps) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit} style={{ display: isOpen ? "block" : "none" }}
-    >
-      {renderStep()}
-    </form>
+    <div className="min-h-screen w-screen">
+      <form onSubmit={handleSubmit}>{renderStep()}</form>
+    </div>
   );
-};
-
-export default LogMealForm;
+}

@@ -15,12 +15,17 @@ const config: Config = {
       'black': "#000000",
       'primary': '#2A5C64',
       'accent-1': '#7d999b',
+      'accent-2': "#15383E",
       'yellow-vivid': '#F5AC54',
       'yellow-muted': '#F1E2C5',
       'yellow-choice': '#FFD19A',
       'red-choice': '#F68989',
       'green-choice': '#A1C9B1',
       'blue-choice': '#BADBD5',
+    },
+    fontFamily: {
+      sans: ['Plus Jakarta Sans', 'sans-serif'],
+      serif: ['Noto Serif', 'serif'],
     },
     extend: {
       backgroundImage: {
