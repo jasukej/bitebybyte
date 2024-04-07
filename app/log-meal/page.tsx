@@ -26,10 +26,29 @@ export default function LogMealPage() {
 
   // Final submission handler
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    //event.preventDefault();
     // Perform the form submission logic, e.g., sending data to the backend
+    try {
+      const response = await fetch('/api/form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    console.log(formData);
+      
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form.');
+      }
+
+      // Handle success (optional)
+      console.log('Form submitted successfully.');
+    } catch (error) {
+      console.error('Error submitting form.');
+    }
+    
     handleCancel(); // Assuming we navigate away after submitting the form
   };
 

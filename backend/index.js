@@ -26,8 +26,8 @@ async function connectMongoDB() {
 
     // //do actions here
     // //await addEntryToMongoDB();
-    // const entry = await addEntryToMealLog("lunch", new Date("2024-04-07"), "beef egg bowl", "angry, stressed", "I hate onions");
-    // response = await cohere.getResponse("lunch", "beef egg bowl", "angry, stressed", "I hate onions");
+    // const entry = await addEntryToMealLog("dinner", new Date("2024-04-07"), "granola bar", "numb, happy", "i am hungry");
+    // response = await cohere.getResponse("dinner", "granola bar", "numb, happy", "i am hungry");
     // console.log("CohereAI replies: " + response);
     // // if we want to log the AI response in our database
     // await addEntryToAiLog(entry.insertedId, response);
@@ -103,3 +103,36 @@ async function returnAllEntriesAiLog() {
 
 
 
+
+const port = 3001;
+
+function start() {
+  const express = require('express');
+  const app = express();
+  const bodyParser = require('body-parser');
+  // let http = require('http').Server(app);
+
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.get("/home", (req, res) => {
+    res.json({ message: "Hello from server!" });
+  });
+
+  app.post('/api/form', createFormHandler);
+
+
+async function createFormHandler(req, res) {
+  const formData = req.body;
+  const response = await formResponse(formData);
+  res.status(200).json(response);
+}
+  
+  app.listen(port, () => {
+    console.log('Backend server is running on port '+ port);
+  // http.listen(app.get('port'), function() {
+  //     console.log('listening on port', app.get('port'));
+  });
+}
+
+start();
