@@ -23,7 +23,7 @@ async function getResponse(mealType_str, mealContent_str, moodTags_str, reflecti
     const response = await cohere.chat({
         message: msg
     });
-    console.log(response);
+    // console.log(response);
 
     return response.text;
 }
