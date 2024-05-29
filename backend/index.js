@@ -1,40 +1,47 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const cohere = require("./cohere.js");
+const cors = require('cors');
 
 const uri = "mongodb+srv://youcode:salmonpoke@youcode24.7yn1u39.mongodb.net/?retryWrites=true&w=majority&appName=youcode24";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+let client = null;
 
-const youcode = client.db("youcode24");
-const meal_log = youcode.collection("meal_log");
-const ai_log = youcode.collection("ai_log");
+
+let youcode = null;
+let meal_log = null;
+let ai_log = null;
+
 
 async function connectMongoDB() {
+  if (client){
+    return;
+  }
   try {
     // Connect the client to the server	(optional starting in v4.7)
+    client = await MongoClient.connect(uri);
     await client.connect();
+
+    youcode = client.db("youcode24");
+    meal_log = youcode.collection("meal_log");
+    ai_log = youcode.collection("ai_log");
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     // console.log("Pinged your deployment. You successfully connected to MongoDB!");
 
     //do actions here
     //await addEntryToMongoDB();
-    const entry = await addEntryToMealLog("dinner", new Date("2024-04-07"), "granola bar", "numb, happy", "i am hungry");
-    response = await cohere.getResponse("dinner", "granola bar", "numb, happy", "i am hungry");
-    console.log("CohereAI replies: " + response);
+    // const entry = await addEntryToMealLog("dinner", new Date("2024-04-07"), "granola bar", "numb, happy", "i am hungry");
+    // response = await cohere.getResponse("dinner", "granola bar", "numb, happy", "i am hungry");
+    // console.log("CohereAI replies: " + response);
     // if we want to log the AI response in our database
     // await addEntryToAiLog(entry.insertedId, response);
 
+  } catch (e) {
+    console.log(e);
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 //call connectMongoDB
@@ -43,26 +50,28 @@ async function connectMongoDB() {
 async function formResponse(formData) {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
     // Send a ping to confirm a successful connection
     // await client.db("admin").command({ ping: 1 });
     // console.log("Pinged your deployment. You successfully connected to MongoDB!");
-
+    await connectMongoDB();
     const entryID = await addEntryToMealLog(formData.mealType, Date(), formData.mealDescription, formData.mealFeeling.join(", "), formData.additionalNotes);
     response = await cohere.getResponse(formData.mealType, formData.mealDescription, formData.mealFeeling.join(", "), formData.additionalNotes);
     // await addEntryToAiLog(entryID, response);
 
     return response;
 
-  } finally {
+  } catch (e) {
+    console.log({e})
+  }  finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 
 async function addEntryToMealLog(mealType_str, date_date, mealContent_str, moodTags_str, reflection_str) {
   try {
-    await client.connect();
+    // await client.connect();
     const doc = {
       mealType: mealType_str, date: date_date, mealContent: mealContent_str, moodTags: moodTags_str,
       reflection: reflection_str
@@ -75,7 +84,7 @@ async function addEntryToMealLog(mealType_str, date_date, mealContent_str, moodT
     return result.insertedId;
 
   } finally {
-    await client.close();
+    // await client.close();
   }
 }
 
@@ -135,13 +144,14 @@ function start() {
   // let http = require('http').Server(app);
   //connectMongoDB().catch(console.dir);
 
+  app.use(cors())
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }));
 
   app.post('/api/form', async (req, res) => {
     console.log('Received POST request to /api/form');
     console.log(req.body);
-
+    console.log('Printed body');
     const response = await formResponse(req.body);
     console.log(response);
     res.status(200).json(response);

@@ -1,6 +1,6 @@
 export type MealLogProps = {
     formData?: FormData;
-    setFormData?: React.Dispatch<React.SetStateAction<FormData>>;
+    setFormData: React.Dispatch<React.SetStateAction<any>>; // THIS IS A BAND AID SOLUTION PLEASE USE TYPES FFS
     onNext?: () => void;
     onPrevious?: () => void;
     onCancel: () => void;

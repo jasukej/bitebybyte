@@ -8,7 +8,9 @@ export default function StepFour({ formData, setFormData, onPrevious, onSubmit }
 
   // Call the onSubmit function which should handle the form submission
   const handleLogMealClick = () => {
-    setFormData({ ...formData, additionalNotes });
+    const thisData = { ...formData, additionalNotes }
+    setFormData(thisData);
+    console.log({thisData})
     if (onSubmit) onSubmit();
   };
 

@@ -16,7 +16,7 @@ export default function LoginPage() {
     router.push("/signup");
   };
 
-  const handleLoginSubmit = (event) => {
+  const handleLoginSubmit = (event: any) => {
     event.preventDefault();
     // handle the login logic, e.g., validate input and perform login.
   };

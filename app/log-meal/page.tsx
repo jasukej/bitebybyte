@@ -26,10 +26,14 @@ export default function LogMealPage() {
   };
 
   // Final submission handler
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //event.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement> | undefined) => {
+    if (event) {
+      event.preventDefault();
+    }
+    
     // Perform the form submission logic, e.g., sending data to the backend
     try {
+      console.log("sending request");
       const response = await fetch('http://localhost:3001/api/form', {
         method: 'POST',
         headers: {
@@ -41,6 +45,8 @@ export default function LogMealPage() {
       if (!response.ok) {
         throw new Error('Failed to submit form.');
       }
+      const jsonBody = await response.json();
+      console.log({jsonBody})
     } catch (error) {
       console.error('Error submitting form.');
     }
@@ -101,7 +107,7 @@ export default function LogMealPage() {
 
   return (
     <div className="min-h-screen w-screen">
-      <form onSubmit={handleSubmit}>{renderStep()}</form>
+      <form>{renderStep()}</form>
     </div>
   );
 }

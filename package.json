@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "start-server": "nodemon backend/index.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -15,12 +16,13 @@
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.15",
     "cohere-ai": "^7.9.1",
+    "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "express": "^4.19.2",
     "framer-motion": "^11.0.25",
     "iron-session": "^8.0.1",
-    "mongodb": "^6.5.0",
-    "next": "^14.1.4",
+    "mongodb": "^6.6.2",
+    "next": "^14.2.3",
     "next-auth": "^5.0.0-beta.16",
     "openssl": "^2.0.0",
     "react": "^18.2.0",
@@ -35,6 +37,7 @@
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
+    "nodemon": "^3.1.1",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
